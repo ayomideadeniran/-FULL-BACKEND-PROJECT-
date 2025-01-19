@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>View Profile Image</title>
+  </head>
+  <body>
+    <h1>View Profile Image</h1>
+
+    <!-- Input field to enter or display the email -->
+    <label for="emailInput">Enter Email:</label>
+    <input type="text" id="emailInput" placeholder="Enter email" />
+    
+    <!-- Button to fetch the image -->
+    <button id="fetchImage">View Image</button>
+
+    <!-- Image element where the profile picture will be displayed -->
+    <img id="profileImage" src="" alt="Profile Image" style="display: none;" />
+
+    <script>
+      // Get elements
+      const emailInput = document.getElementById("emailInput");
+      const profileImage = document.getElementById("profileImage");
+      const fetchImageButton = document.getElementById("fetchImage");
+
+      // Add event listener to the button
+      fetchImageButton.addEventListener("click", function() {
+        const email = emailInput.value.trim(); // Get email from input field
+
+        if (email) {
+          // Dynamically set the src of the image based on the email entered
+          profileImage.src = `/image/${encodeURIComponent(email)}`;
+          profileImage.style.display = "block"; // Show the image
+        } else {
+          alert("Please enter a valid email");
+        }
+      });
+    </script>
+  </body>
+</html>

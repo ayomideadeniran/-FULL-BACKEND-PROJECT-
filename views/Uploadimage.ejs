@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Image Upload</title>
+  </head>
+  <body>
+    <h1>Upload Profile Picture</h1>
+
+    <% if (messages.error) { %>
+    <div class="alert alert-danger"><%= messages.error %></div>
+    <% } %> <% if (messages.success) { %>
+    <div class="alert alert-success"><%= messages.success %></div>
+    <% } %>
+
+    <form action="/submit-upload" method="POST" enctype="multipart/form-data">
+      <div class="form-group">
+        <label for="email">Email:</label>
+        <input
+          type="email"
+          name="email"
+          id="email"
+          required
+          class="form-control"
+          placeholder="Enter your email"
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="profileImage">Profile Image:</label>
+        <input
+          type="file"
+          name="profileImage"
+          id="profileImage"
+          required
+          class="form-control"
+        />
+      </div>
+
+      <button type="submit" class="btn btn-primary">Upload</button>
+    </form>
+  </body>
+</html>

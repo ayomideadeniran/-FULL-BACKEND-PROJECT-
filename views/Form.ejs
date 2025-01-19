@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Registration</title>
+  <link rel="stylesheet" href="/css/Form.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Student Registration Form</h1>
+    
+    <% if (messages.error) { %>
+      <div class="alert alert-danger">
+        <%= messages.error %>
+      </div>
+    <% } %>
+
+    <% if (messages.success) { %>
+      <div class="alert alert-success">
+        <%= messages.success %>
+      </div>
+    <% } %>
+
+    <form action="/submit-form" method="POST">
+      <div class="form-group">
+        <label for="name">Name:</label>
+        <input type="text" name="name" id="name" required class="form-control" value="John Doe" placeholder="Enter your name">
+      </div>
+
+      <div class="form-group">
+        <label for="email">Email:</label>
+        <input type="email" name="email" id="email" required class="form-control" value="johndoe@example.com" placeholder="Enter your email">
+      </div>
+
+      <div class="form-group">
+        <label for="dateOfBirth">Date of Birth:</label>
+        <input type="date" name="dateOfBirth" id="dateOfBirth" required class="form-control" value="2000-01-01">
+      </div>
+
+      <div class="form-group">
+        <label for="gender">Gender:</label>
+        <select name="gender" id="gender" required class="form-control">
+          <option value="">Select Gender</option>
+          <option value="Male" selected>Male</option>
+          <option value="Female">Female</option>
+          <option value="Other">Other</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="nationality">Nationality:</label>
+        <input type="text" name="nationality" id="nationality" required class="form-control" value="American" placeholder="Enter your nationality">
+      </div>
+
+      <div class="form-group">
+        <label for="address">Address:</label>
+        <input type="text" name="address" id="address" required class="form-control" value="123 Main St, City, State" placeholder="Enter your address">
+      </div>
+
+      <div class="form-group">
+        <label for="phoneNumber">Phone Number:</label>
+        <input type="tel" name="phoneNumber" id="phoneNumber" required class="form-control" value="555-1234" placeholder="Enter your phone number">
+      </div>
+
+      <h3>Emergency Contact</h3>
+
+      <div class="form-group">
+        <label for="emergencyContactName">Contact Name:</label>
+        <input type="text" name="emergencyContactName" id="emergencyContactName" required class="form-control" value="Jane Doe" placeholder="Emergency Contact Name">
+      </div>
+
+      <div class="form-group">
+        <label for="emergencyContactRelationship">Relationship:</label>
+        <input type="text" name="emergencyContactRelationship" id="emergencyContactRelationship" required class="form-control" value="Mother" placeholder="Relationship">
+      </div>
+
+      <div class="form-group">
+        <label for="emergencyContactPhone">Contact Phone:</label>
+        <input type="tel" name="emergencyContactPhone" id="emergencyContactPhone" required class="form-control" value="555-5678" placeholder="Emergency Contact Phone">
+      </div>
+
+      <div class="form-group">
+        <label for="previousSchool">Previous School:</label>
+        <input type="text" name="previousSchool" id="previousSchool" required class="form-control" value="High School ABC" placeholder="Previous School">
+      </div>
+
+      <div class="form-group">
+        <label for="gradeLevel">Grade Level:</label>
+        <input type="text" name="gradeLevel" id="gradeLevel" required class="form-control" value="12" placeholder="Grade Level">
+      </div>
+
+      <div class="form-group">
+        <label for="program">Program:</label>
+        <input type="text" name="program" id="program" required class="form-control" value="Computer Science" placeholder="Program">
+      </div>
+
+      <div class="form-group">
+        <label for="degreeType">Degree Type:</label>
+        <input type="text" name="degreeType" id="degreeType" required class="form-control" value="Bachelor" placeholder="Degree Type">
+    </div>
+
+      <div class="form-group">
+        <label for="paymentMethod">Payment Method:</label>
+        <input type="text" name="paymentMethod" id="paymentMethod" required class="form-control" value="Credit Card" placeholder="Payment Method">
+      </div>
+
+      <div class="form-group">
+        <label for="paymentAmount">Payment Amount:</label>
+        <input type="number" name="paymentAmount" id="paymentAmount" required class="form-control" value="5000" placeholder="Payment Amount">
+      </div>
+
+      <div class="form-group">
+        <label for="financialAid">Financial Aid:</label>
+        <input type="checkbox" name="financialAid" id="financialAid" checked>
+      </div>
+
+      <div class="form-group">
+        <label for="housingPreferences">Housing Preferences:</label>
+        <input type="text" name="housingPreferences" id="housingPreferences" class="form-control" value="Shared Room" placeholder="Housing Preferences">
+    </div>
+
+      <div class="form-group">
+        <label for="extracurricularActivities">Extracurricular Activities:</label>
+        <input type="text" name="extracurricularActivities" id="extracurricularActivities" class="form-control" value="Soccer, Chess Club" placeholder="Extracurricular Activities">
+      </div>
+
+      <div class="form-group">
+        <label for="specialNeeds">Special Needs:</label>
+        <input type="text" name="specialNeeds" id="specialNeeds" class="form-control" value="None" placeholder="Special Needs">
+      </div>
+
+      <button type="submit" class="btn btn-primary">Register</button>
+    </form>
+  </div>
+</body>
+</html>

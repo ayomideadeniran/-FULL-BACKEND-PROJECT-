@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Registration Form</title>
+    <link rel="stylesheet" href="/css/Register.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" />
+  </head>
+  <body>
+    <h2>Registration Form</h2>
+
+    <!-- Flash Message Display -->
+    <% if (messages.error) { %>
+      <div class="flash-error">
+        <%= messages.error %>
+      </div>
+    <% } %>
+
+    <% if (messages.success) { %>
+      <div class="flash-success">
+        <%= messages.success %>
+      </div>
+    <% } %>
+
+    <form action="/submit-register" method="POST">
+      <!-- Name -->
+      <div class="form-group">
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" required />
+      </div>
+
+      <!-- Email -->
+      <div class="form-group">
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required />
+      </div>
+
+      <!-- Password -->
+      <div class="form-group">
+        <label for="password">Password:</label>
+        <div class="password-input">
+          <input type="password" id="password" name="password" required />
+          <i id="password-eye" class="fa-solid fa-eye"></i>
+        </div>
+      </div>
+
+      <!-- Confirm Password -->
+      <div class="form-group">
+        <label for="confirmPassword">Confirm Password:</label>
+        <div class="password-input">
+          <input type="password" id="confirmPassword" name="confirmPassword" required />
+          <i id="confirmPassword-eye" class="fa-solid fa-eye"></i>
+        </div>
+      </div>
+
+      <!-- Age -->
+      <div class="form-group">
+        <label for="age">Age:</label>
+        <input type="number" id="age" name="age" required />
+      </div>
+
+      <!-- Gender -->
+      <div class="form-group">
+        <label>Gender:</label>
+        <input type="radio" id="male" name="gender" value="male" required /> Male
+        <input type="radio" id="female" name="gender" value="female" required /> Female
+      </div>
+
+      <!-- Country -->
+      <div class="form-group">
+        <label for="country">Country:</label>
+        <select id="country" name="country" required>
+          <option value="">Select your country</option>
+          <option value="USA">USA</option>
+          <option value="Canada">Canada</option>
+          <option value="UK">UK</option>
+        </select>
+      </div>
+
+      <!-- Terms & Conditions -->
+      <div class="form-group">
+        <input type="checkbox" id="terms" name="terms" required />
+        <label for="terms">I agree to the Terms and Conditions</label>
+      </div>
+
+      <!-- Submit -->
+      <button type="submit">Register</button>
+
+      <!-- Login Link -->
+      <p>Already have an account? <a href="/log">Login</a></p>
+    </form>
+
+    <script>
+      // Flash message fade-out after a few seconds
+      setTimeout(() => {
+        const flashErrors = document.querySelector('.flash-error');
+        const flashSuccess = document.querySelector('.flash-success');
+        if (flashErrors) {
+          flashErrors.style.display = 'none';
+        }
+        if (flashSuccess) {
+          flashSuccess.style.display = 'none';
+        }
+      }, 3000);
+
+      // Password visibility toggle
+      const passwordInput = document.getElementById('password');
+      const passwordEye = document.getElementById('password-eye');
+      const confirmPasswordInput = document.getElementById('confirmPassword');
+      const confirmPasswordEye = document.getElementById('confirmPassword-eye');
+
+      passwordEye.addEventListener('click', () => {
+        if (passwordInput.type === 'password') {
+          passwordInput.type = 'text';
+          passwordEye.classList.remove('fa-eye');
+          passwordEye.classList.add('fa-eye-slash');
+        } else {
+          passwordInput.type = 'password';
+          passwordEye.classList.remove('fa-eye-slash');
+          passwordEye.classList.add('fa-eye');
+        }
+      });
+
+      confirmPasswordEye.addEventListener('click', () => {
+        if (confirmPasswordInput.type === 'password') {
+          confirmPasswordInput.type = 'text';
+          confirmPasswordEye.classList.remove('fa-eye');
+          confirmPasswordEye.classList.add('fa-eye-slash');
+        } else {
+          confirmPasswordInput.type = 'password';
+          confirmPasswordEye.classList.remove('fa-eye-slash');
+          confirmPasswordEye.classList.add('fa-eye');
+        }
+      });
+    </script>
+  </body>
+</html>
