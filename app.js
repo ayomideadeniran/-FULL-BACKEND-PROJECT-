@@ -23,6 +23,7 @@ mongoose
 app.use(
   cors({
     origin: "http://localhost:5173", // Frontend URL
+    // origin: "http://192.168.0.101:3000", // Frontend URL
     credentials: true, // Allow cookies and credentials
   })
 );
