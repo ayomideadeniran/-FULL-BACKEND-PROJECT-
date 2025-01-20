@@ -135,7 +135,7 @@ router.post("/reset-password/:token", async (req, res) => {
     await user.save();
 
     req.flash("success", "Password has been reset. You can now log in.");
-    res.render("log"); // Render the login page after successful reset
+    // res.render("log"); // Render the login page after successful reset
   } catch (error) {
     console.error("Error resetting password:", error);
     req.flash("error", "Something went wrong.");
