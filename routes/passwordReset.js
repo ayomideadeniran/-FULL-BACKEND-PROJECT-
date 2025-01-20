@@ -36,7 +36,7 @@ router.post("/forgot-password", async (req, res) => {
 
     // Send email with the reset token
     // const resetUrl = `https://full-frontend-project.vercel.app/ResetPassword/${resetToken}`;
-    const resetUrl = `https://full-backend-project2.onrender.com/auth/reset-password/${resetToken}`;
+    const resetUrl = `https://full-backend-project2.onrender.com/reset-password/${resetToken}`;
 
     const message = `You are receiving this because you requested a password reset. Please click on the following link to reset your password: ${resetUrl}`;
 
