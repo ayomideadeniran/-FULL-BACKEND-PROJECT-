@@ -22,9 +22,9 @@ mongoose
 // Middleware
 app.use(
   cors({
-    origin: "https://full-frontend-project.vercel.app/", // Frontend URL
+    origin: "http://localhost:5173", // Frontend URL
     // origin: "http://192.168.0.101:3000", // Frontend URL
-    // methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
     credentials: true, // Allow cookies and credentials
   })
 );
