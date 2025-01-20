@@ -22,11 +22,12 @@ mongoose
 // Middleware
 app.use(
   cors({
-    origin: "http://localhost:5173", // Frontend URL
-    // origin: "http://192.168.0.101:3000", // Frontend URL
+    origin: ["http://localhost:5173"], // Replace with your frontend's hosted URL
+    methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true, // Allow cookies and credentials
   })
 );
+
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
