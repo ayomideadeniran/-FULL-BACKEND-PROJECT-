@@ -22,7 +22,7 @@ mongoose
 // Middleware
 app.use(
   cors({
-    origin: "http://localhost:5173", // Frontend URL
+    origin: "https://full-backend-project2.onrender.com/", // Frontend URL
     // origin: "http://192.168.0.101:3000", // Frontend URL
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     credentials: true, // Allow cookies and credentials
