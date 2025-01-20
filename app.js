@@ -20,14 +20,28 @@ mongoose
   .catch((err) => console.error("MongoDB connection error:", err));
 
 // Middleware
-app.use(
-  cors({
-    origin: "http://localhost:5173", // Frontend URL
-    // origin: "http://192.168.0.101:3000", // Frontend URL
-    methods: ['GET', 'POST', 'PUT', 'DELETE'],
-    credentials: true, // Allow cookies and credentials
-  })
-);
+// app.use(
+//   cors({
+//     origin: [
+//       "http://localhost:5173", // Local frontend for development
+//       "https://full-frontend-project.vercel.app", // Deployed frontend
+//     ],
+//     methods: ['GET', 'POST', 'PUT', 'DELETE'],
+//     credentials: true,
+//   })
+// );
+app.use(cors((req, callback) => {
+  const allowedOrigins = [
+    "http://localhost:5173",
+    "https://full-frontend-project.vercel.app",
+  ];
+  const origin = req.header("Origin");
+  if (allowedOrigins.includes(origin)) {
+    callback(null, { origin: true, credentials: true });
+  } else {
+    callback(null, { origin: false });
+  }
+}));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
