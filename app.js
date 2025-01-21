@@ -5,11 +5,13 @@ const session = require("express-session");
 const flash = require("express-flash");
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
-const { exec } = require("child_process");
+const cluster = require("cluster");
+const os = require("os");
+
 dotenv.config();
 
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;
 
 // Database connection
 mongoose
@@ -21,18 +23,16 @@ mongoose
   .catch((err) => console.error("MongoDB connection error:", err));
 
 // Middleware
-app.use(cors((req, callback) => {
-  const allowedOrigins = [
-    "http://localhost:5173",
-    "https://full-frontend-project.vercel.app",
-  ];
-  const origin = req.header("Origin");
-  if (allowedOrigins.includes(origin)) {
-    callback(null, { origin: true, credentials: true });
-  } else {
-    callback(null, { origin: false });
-  }
-}));
+app.use(
+  cors({
+    origin: [
+      "http://localhost:5173", // Local frontend for development
+      "https://full-frontend-project.vercel.app", // Deployed frontend
+    ],
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true,
+  })
+);
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -46,7 +46,7 @@ app.use(
     secret: process.env.SECRET,
     resave: false,
     saveUninitialized: true,
-    cookie: { secure: false }, // Set to `true` if using HTTPS
+    cookie: { secure: false }, // Set `secure: true` if using HTTPS
   })
 );
 
@@ -67,29 +67,44 @@ app.use("/", FormRouter);
 app.use("/", uploadImage);
 app.use("/", Imagefetch);
 
+// Health check route for uptime services like UptimeRobot
+app.get("/", (req, res) => {
+  console.log("Health check ping received at:", new Date().toISOString());
+  res.status(200).send("Server is up and running!");
+});
+
 // Catch-all for 404 errors
 app.use((req, res, next) => {
   res.status(404).render("404", { errorCode: 404, message: "Page Not Found" });
 });
 
-// Start server
-const server = app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
-});
+// If we are the master process, we fork worker processes
+if (cluster.isMaster) {
+  const numCPUs = os.cpus().length;
 
-// Periodic restart logic
-setTimeout(() => {
-  console.log("Restarting server to keep Render package active...");
-  exec("node app.js", (error, stdout, stderr) => {
-    if (error) {
-      console.error(`Error restarting server: ${error.message}`);
-      return;
-    }
-    if (stderr) {
-      console.error(`Standard error: ${stderr}`);
-      return;
-    }
-    console.log(stdout);
-    process.exit(0); // Exit the current process after restarting
+  // Fork workers based on available CPU cores
+  for (let i = 0; i < numCPUs; i++) {
+    cluster.fork();
+  }
+
+  // Graceful shutdown mechanism
+  cluster.on("exit", (worker, code, signal) => {
+    console.log(`Worker ${worker.process.pid} died. Restarting...`);
+    cluster.fork(); // Restart the worker that died
   });
-}, 60 * 1000); // Restart every 60 seconds
+
+  // Restart a worker every 2 minutes without affecting other workers
+  setInterval(() => {
+    console.log("Gracefully restarting worker...");
+    const worker = cluster.fork();
+    setTimeout(() => {
+      worker.kill();
+    }, 5000); // Allow 5 seconds for graceful shutdown before killing the worker
+  }, 2 * 60 * 1000); // Every 2 minutes
+
+} else {
+  // Worker process (your app code)
+  app.listen(port, () => {
+    console.log(`Worker ${process.pid} is running on port ${port}`);
+  });
+}
