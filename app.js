@@ -5,11 +5,10 @@ const session = require("express-session");
 const flash = require("express-flash");
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
-
 dotenv.config();
 
 const app = express();
-const port = process.env.PORT || 3000;
+const port = 3000;
 
 // Database connection
 mongoose
@@ -21,16 +20,28 @@ mongoose
   .catch((err) => console.error("MongoDB connection error:", err));
 
 // Middleware
-app.use(
-  cors({
-    origin: [
-      "http://localhost:5173", // Local frontend for development
-      "https://full-frontend-project.vercel.app", // Deployed frontend
-    ],
-    methods: ["GET", "POST", "PUT", "DELETE"],
-    credentials: true,
-  })
-);
+// app.use(
+//   cors({
+//     origin: [
+//       "http://localhost:5173", // Local frontend for development
+//       "https://full-frontend-project.vercel.app", // Deployed frontend
+//     ],
+//     methods: ['GET', 'POST', 'PUT', 'DELETE'],
+//     credentials: true,
+//   })
+// );
+app.use(cors((req, callback) => {
+  const allowedOrigins = [
+    "http://localhost:5173",
+    "https://full-frontend-project.vercel.app",
+  ];
+  const origin = req.header("Origin");
+  if (allowedOrigins.includes(origin)) {
+    callback(null, { origin: true, credentials: true });
+  } else {
+    callback(null, { origin: false });
+  }
+}));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -44,7 +55,7 @@ app.use(
     secret: process.env.SECRET,
     resave: false,
     saveUninitialized: true,
-    cookie: { secure: false }, // Set `secure: true` if using HTTPS
+    cookie: { secure: false }, // Set to `true` if using HTTPS
   })
 );
 
@@ -65,25 +76,22 @@ app.use("/", FormRouter);
 app.use("/", uploadImage);
 app.use("/", Imagefetch);
 
-// Health check route for uptime services like UptimeRobot
-app.get("/", (req, res) => {
-  console.log("Health check ping received at:", new Date().toISOString());
-  res.status(200).send("Server is up and running!");
-});
 
 // Catch-all for 404 errors
 app.use((req, res, next) => {
   res.status(404).render("404", { errorCode: 404, message: "Page Not Found" });
 });
 
-// Restart the server every 2 minutes (120,000 ms)
-setInterval(() => {
-  console.log("Restarting server to keep Render package active...");
-  process.exit(0); // Gracefully stop the server, triggering a restart
-}, 2 * 60 * 1000); // 2 minutes in milliseconds
 
 // Start server
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
-  console.log("==> Your service is live 🎉");
 });
+
+
+
+
+
+
+
+
