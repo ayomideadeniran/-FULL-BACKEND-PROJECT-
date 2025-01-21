@@ -5,8 +5,6 @@ const session = require("express-session");
 const flash = require("express-flash");
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
-const cluster = require("cluster");
-const os = require("os");
 
 dotenv.config();
 
@@ -78,33 +76,14 @@ app.use((req, res, next) => {
   res.status(404).render("404", { errorCode: 404, message: "Page Not Found" });
 });
 
-// If we are the master process, we fork worker processes
-if (cluster.isMaster) {
-  const numCPUs = os.cpus().length;
+// Restart the server every 2 minutes (120,000 ms)
+setInterval(() => {
+  console.log("Restarting server to keep Render package active...");
+  process.exit(0); // Gracefully stop the server, triggering a restart
+}, 2 * 60 * 1000); // 2 minutes in milliseconds
 
-  // Fork workers based on available CPU cores
-  for (let i = 0; i < numCPUs; i++) {
-    cluster.fork();
-  }
-
-  // Graceful shutdown mechanism
-  cluster.on("exit", (worker, code, signal) => {
-    console.log(`Worker ${worker.process.pid} died. Restarting...`);
-    cluster.fork(); // Restart the worker that died
-  });
-
-  // Restart a worker every 2 minutes without affecting other workers
-  setInterval(() => {
-    console.log("Gracefully restarting worker...");
-    const worker = cluster.fork();
-    setTimeout(() => {
-      worker.kill();
-    }, 5000); // Allow 5 seconds for graceful shutdown before killing the worker
-  }, 2 * 60 * 1000); // Every 2 minutes
-
-} else {
-  // Worker process (your app code)
-  app.listen(port, () => {
-    console.log(`Worker ${process.pid} is running on port ${port}`);
-  });
-}
+// Start server
+app.listen(port, () => {
+  console.log(`Server is running on port ${port}`);
+  console.log("==> Your service is live 🎉");
+});
