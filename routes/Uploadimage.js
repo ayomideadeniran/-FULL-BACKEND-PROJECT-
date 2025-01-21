@@ -1,6 +1,7 @@
 const express = require("express");
 const multer = require("multer");
 const nodemailer = require("nodemailer");
+const User = require("../models/User"); // Import the User model
 const Image = require("../models/Image"); // Import the Image model
 const router = express.Router();
 
@@ -16,6 +17,14 @@ router.post(
     try {
       const { email } = req.body;
       const imageFile = req.file;
+
+      // Check if the email exists in the User database
+      const user = await User.findOne({ email });
+      if (!user) {
+        return res
+          .status(404)
+          .json({ message: "Email not registered. Image upload denied." });
+      }
 
       // Create a new image record
       const newImage = new Image({
@@ -57,25 +66,5 @@ router.post(
     }
   }
 );
-
-// Handle image deletion
-router.delete("/delete-image", async (req, res) => {
-  const { imageId, email } = req.body; // Receive the imageId and email
-
-  try {
-    // Find and delete the image by email and imageId
-    const imageToDelete = await Image.findOneAndDelete({ email, _id: imageId });
-
-    if (!imageToDelete) {
-      return res.status(404).json({ message: "Image not found." });
-    }
-
-    // Send a success response
-    res.json({ message: "Image deleted successfully." });
-  } catch (error) {
-    console.error("Error deleting image:", error);
-    res.status(500).json({ message: "Error deleting image." });
-  }
-});
 
 module.exports = router;
