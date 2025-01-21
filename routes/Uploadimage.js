@@ -62,7 +62,7 @@ router.post(
       });
     } catch (error) {
       console.error("Error uploading image:", error);
-      res.status(500).json({ message: "Image upload failed." });
+      res.status(500).json({ message: "Image upload failed probably you need to Registerd." });
     }
   }
 );

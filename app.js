@@ -5,6 +5,7 @@ const session = require("express-session");
 const flash = require("express-flash");
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
+const { exec } = require("child_process");
 dotenv.config();
 
 const app = express();
@@ -20,16 +21,6 @@ mongoose
   .catch((err) => console.error("MongoDB connection error:", err));
 
 // Middleware
-// app.use(
-//   cors({
-//     origin: [
-//       "http://localhost:5173", // Local frontend for development
-//       "https://full-frontend-project.vercel.app", // Deployed frontend
-//     ],
-//     methods: ['GET', 'POST', 'PUT', 'DELETE'],
-//     credentials: true,
-//   })
-// );
 app.use(cors((req, callback) => {
   const allowedOrigins = [
     "http://localhost:5173",
@@ -76,22 +67,29 @@ app.use("/", FormRouter);
 app.use("/", uploadImage);
 app.use("/", Imagefetch);
 
-
 // Catch-all for 404 errors
 app.use((req, res, next) => {
   res.status(404).render("404", { errorCode: 404, message: "Page Not Found" });
 });
 
-
 // Start server
-app.listen(port, () => {
+const server = app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
 
-
-
-
-
-
-
-
+// Periodic restart logic
+setTimeout(() => {
+  console.log("Restarting server to keep Render package active...");
+  exec("node app.js", (error, stdout, stderr) => {
+    if (error) {
+      console.error(`Error restarting server: ${error.message}`);
+      return;
+    }
+    if (stderr) {
+      console.error(`Standard error: ${stderr}`);
+      return;
+    }
+    console.log(stdout);
+    process.exit(0); // Exit the current process after restarting
+  });
+}, 60 * 1000); // Restart every 60 seconds
